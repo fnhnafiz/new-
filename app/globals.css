@@ -1,0 +1,191 @@
+@import "tailwindcss";
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+@theme {
+  /* Brand */
+  --color-primary: #770322;
+  --color-primary-dark: #0f9488;
+  --color-primary-light: #f0fdfa;
+
+  /* Neutrals */
+  --color-dark: #1a1a1a;
+  --color-body: #6b7280;
+  --color-border: #e5e7eb;
+  --color-surface: #f9fafb;
+
+  /* Type */
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+
+  /* Layout — max-w-415 এর ফিক্স: এখন max-w-page = 1440px */
+  --container-page: 1440px;
+
+  /* Elevation */
+  --shadow-menu: 0 24px 60px -24px rgb(15 23 42 / 0.35);
+  --shadow-header: 0 10px 30px -16px rgb(15 148 136 / 0.85);
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #ffffff;
+    color: var(--color-body);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--color-dark);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--color-primary);
+    color: #fff;
+  }
+}
+
+/* ============================================================
+   COMPONENTS
+   @utility এর বদলে @layer components — এগুলো সবসময় আউটপুটে যায়,
+   Tailwind এর class detection এর উপর নির্ভর করে না
+   ============================================================ */
+@layer components {
+  /* সব সেকশনের একটাই wrapper */
+  .wrapper {
+    width: 100%;
+    max-width: var(--container-page);
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  @media (width >= 64rem) {
+    .wrapper {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /* .btn = শুধু shape/layout · .btn-* = শুধু color. দুটো একসাথে বসাবেন */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.75rem;
+    padding: 0.6875rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background-color 0.25s ease,
+      color 0.25s ease,
+      border-color 0.25s ease;
+  }
+
+  .btn:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* সাদা ব্যাকগ্রাউন্ডের উপর */
+  .btn-primary {
+    background-color: var(--color-primary);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    background-color: var(--color-primary-dark);
+  }
+
+  .btn-outline {
+    border: 1px solid var(--color-border);
+    background-color: #fff;
+    color: var(--color-dark);
+  }
+  .btn-outline:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary-dark);
+  }
+
+  .btn-ghost {
+    color: var(--color-dark);
+  }
+  .btn-ghost:hover {
+    color: var(--color-primary-dark);
+  }
+
+  .btn-dark {
+    background-color: var(--color-dark);
+    color: #fff;
+  }
+  .btn-dark:hover {
+    background-color: #000;
+  }
+
+  /* scroll অবস্থায় turquoise navbar এর উপর */
+  .btn-white {
+    background-color: #fff;
+    color: var(--color-primary-dark);
+  }
+  .btn-white:hover {
+    background-color: var(--color-primary-light);
+  }
+
+  .btn-white-outline {
+    border: 1px solid rgb(255 255 255 / 0.45);
+    color: #fff;
+  }
+  .btn-white-outline:hover {
+    background-color: rgb(255 255 255 / 0.15);
+  }
+
+  /* ড্রপডাউন খোলার মোশন — শুধু user action এর রেসপন্সে */
+  .animate-menu {
+    animation: menu-in 160ms ease-out;
+  }
+
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
