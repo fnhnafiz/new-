@@ -75,7 +75,7 @@ export default function FinalCta() {
                   <ArrowRight size={17} />
                 </Link>
                 <Link href="/visa-checker" className="btn btn-white-outline">
-                  Check my visa chances
+                  Apply Now
                 </Link>
               </div>
 
