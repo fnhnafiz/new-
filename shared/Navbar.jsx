@@ -99,8 +99,8 @@ export default function Navbar() {
           ? "text-white"
           : "text-white/80 hover:text-white"
         : active
-          ? "text-primary-dark"
-          : "text-dark/80 hover:text-primary-dark"
+          ? "text-primary"
+          : "text-dark hover:text-primary"
     }`;
 
   return (
@@ -179,7 +179,7 @@ export default function Navbar() {
               className={`${BTN} ${
                 scrolled
                   ? "border border-white/40 text-white hover:bg-white/15"
-                  : "border border-[#e5e7eb] text-[#1a1a1a] hover:border-primary hover:text-primary-dark"
+                  : "border border-[#e5e7eb] text-[#1a1a1a] hover:border-primary hover:text-primary cursor-pointer"
               }`}
             >
               Log in
@@ -190,7 +190,7 @@ export default function Navbar() {
               className={`${BTN} ${
                 scrolled
                   ? "bg-white text-black shadow-sm hover:bg-[#f0fdfa]"
-                  : "bg-primary text-white hover:bg-[#0f9488]"
+                  : "bg-primary text-white hover:bg-primary-dark"
               }`}
             >
               Book counseling
@@ -215,8 +215,8 @@ export default function Navbar() {
             className="animate-menu absolute inset-x-0 top-full hidden xl:block"
             onMouseEnter={() => openNow("countries")}
           >
-            <div className="wrapper pt-2">
-              <div className="grid grid-cols-[1fr_300px] overflow-hidden rounded-2xl border border-border bg-white shadow-menu">
+            <div className="wrapper ">
+              <div className="grid grid-cols-[1fr_300px] overflow-hidden rounded-b-2xl border border-border bg-white shadow-menu">
                 <div className="grid grid-cols-3 gap-x-8 gap-y-8 p-8">
                   {destinations.map((group) => (
                     <div key={group.region}>
@@ -228,7 +228,7 @@ export default function Navbar() {
                           <li key={country.href}>
                             <Link
                               href={country.href}
-                              className="flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-[14px] text-dark transition-colors hover:bg-primary-light hover:text-primary-dark"
+                              className="flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-[14px] text-dark transition-colors hover:bg-primary/90 hover:text-white"
                             >
                               <span aria-hidden="true" className="text-base">
                                 {country.flag}
@@ -242,7 +242,7 @@ export default function Navbar() {
                   ))}
                 </div>
 
-                <aside className="flex flex-col justify-between border-l border-border bg-primary-light p-8">
+                <aside className="flex flex-col justify-between border-l border-border bg-primary/10 p-8">
                   <div>
                     <h3 className="text-[17px] font-semibold">
                       Not sure which country fits you?
@@ -256,7 +256,7 @@ export default function Navbar() {
                   <div className="mt-6 space-y-3">
                     <Link
                       href="/visa-checker"
-                      className={`${BTN} w-full bg-primary text-white hover:bg-[#0f9488]`}
+                      className={`${BTN} w-full bg-primary text-white hover:bg-primary-dark`}
                     >
                       Check my chances
                     </Link>
@@ -450,13 +450,13 @@ function Logo({ scrolled = false }) {
 
 function DropdownPanel({ items, footer }) {
   return (
-    <div className="animate-menu absolute left-0 top-full w-[350px] pt-2">
-      <div className="rounded-2xl border border-border bg-white p-2 shadow-menu">
+    <div className="animate-menu absolute left-0 top-full w-[350px] ">
+      <div className="rounded-b-2xl mt-4 border-b border-border bg-white p-2 shadow-menu">
         {items.map(({ label, href, desc, icon: Icon, badge }) => (
           <Link
             key={href}
             href={href}
-            className="group flex gap-3 rounded-xl p-3 transition-colors hover:bg-primary-light"
+            className="group flex gap-3 rounded-xl p-3 transition-colors hover:bg-primary/10"
           >
             <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-light text-primary-dark transition-colors group-hover:bg-primary group-hover:text-white">
               <Icon size={18} />

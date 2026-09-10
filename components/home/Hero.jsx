@@ -25,7 +25,7 @@ export default function Hero() {
               Book free counseling
             </Link>
             <Link href="/visa-checker" className="btn btn-white-outline">
-              Check visa chances
+              Apply Now
             </Link>
           </div>
         </div>
