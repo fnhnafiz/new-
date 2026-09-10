@@ -29,7 +29,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${dmSans.variable} antialiased`}>
       {/* মোবাইলে নিচের sticky CTA bar যেন কনটেন্ট ঢেকে না ফেলে */}
-      <body className="pb-[68px] xl:pb-0 " suppressHydrationWarning>
+      <body className="pb-[68px] xl:pb-0 bg-surface" suppressHydrationWarning>
         <ReduxProvider>
           <ToastProvider />
           <main>{children}</main>

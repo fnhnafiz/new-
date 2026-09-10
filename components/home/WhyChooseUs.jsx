@@ -32,7 +32,7 @@ export default function WhyChooseUs() {
   const [ref, inView] = useInView();
 
   return (
-    <section ref={ref} className="overflow-hidden bg-white py-20 lg:py-28">
+    <section ref={ref} className="overflow-hidden  py-20 lg:py-28">
       <div className="wrapper px-5 lg:px-8">
         {/* ---------------- top heading ---------------- */}
         <div className="mx-auto max-w-3xl text-center">

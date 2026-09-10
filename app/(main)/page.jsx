@@ -2,7 +2,9 @@ import AiTools from "@/components/home/AiTools";
 import Consultation from "@/components/home/Consultation";
 import CourseFinderBanner from "@/components/home/CourseFinderBanner";
 import Destinations from "@/components/home/Destinations";
+import Faq from "@/components/home/Faq";
 import FeaturedCourses from "@/components/home/FeaturedCourses";
+import FinalCta from "@/components/home/FinalCta";
 import Hero from "@/components/home/Hero";
 import HowItWorks from "@/components/home/HowItWorks";
 import LatestBlog from "@/components/home/LatestBlog";
@@ -28,6 +30,8 @@ const page = () => {
       <FeaturedCourses />
       <SuccessStories />
       <LatestBlog />
+      <Faq />
+      <FinalCta />
     </div>
   );
 };

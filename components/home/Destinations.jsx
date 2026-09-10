@@ -79,7 +79,7 @@ const countries = [
 
 export default function Destinations() {
   return (
-    <section className="bg-white py-20 lg:py-28">
+    <section className=" py-20 lg:py-28">
       <div className="wrapper px-5 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl">

@@ -65,6 +65,9 @@ export default function Navbar() {
   useEffect(() => {
     if (!locked) return;
 
+    window.lenis?.stop();
+
+
     // scrollbar এর প্রস্থ মেপে ঠিক ততটুকু padding, নইলে পেজ ডানে সরে যায়
     const scrollbar = window.innerWidth - document.documentElement.clientWidth;
     const prevOverflow = document.body.style.overflow;
@@ -74,6 +77,7 @@ export default function Navbar() {
     if (scrollbar > 0) document.body.style.paddingRight = `${scrollbar}px`;
 
     return () => {
+       window.lenis?.start();
       document.body.style.overflow = prevOverflow;
       document.body.style.paddingRight = prevPadding;
     };
@@ -307,7 +311,7 @@ export default function Navbar() {
             </button>
           </div>
 
-          <nav className="flex-1 overflow-y-auto px-5" aria-label="Mobile">
+          <nav className="flex-1 overflow-y-auto px-5" data-lenis-prevent aria-label="Mobile">
             {mainLinks.map((item) =>
               item.menu ? (
                 <div key={item.label} className="border-b border-border">

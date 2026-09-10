@@ -13,6 +13,8 @@ import {
   Building2,
   Eye,
   EyeOff,
+  ArrowLeft,
+  MailCheck,
 } from "lucide-react";
 
 const roles = [
@@ -20,6 +22,21 @@ const roles = [
   { value: "agent", label: "Agent", icon: Briefcase },
   { value: "university", label: "University", icon: Building2 },
 ];
+
+const copy = {
+  login: {
+    title: "Welcome back",
+    sub: "Pick up where you left off with your applications and saved courses.",
+  },
+  signup: {
+    title: "Create your account",
+    sub: "Track applications, save courses and keep your documents in one place.",
+  },
+  forgot: {
+    title: "Reset your password",
+    sub: "Give us the email on your account and we will send you a reset link.",
+  },
+};
 
 export default function AuthModal({ open, onClose }) {
   const [mounted, setMounted] = useState(false);
@@ -36,12 +53,14 @@ export default function AuthModal({ open, onClose }) {
     }
 
     setVisible(false);
-    const timer = setTimeout(() => setMounted(false), 220);
+    const timer = setTimeout(() => {
+      setMounted(false);
+      setMode("login"); // পরেরবার খুললে আবার লগইন থেকেই শুরু
+    }, 220);
     return () => clearTimeout(timer);
   }, [open]);
 
-  /* scroll lock এখানে নেই — Navbar একাই সেটা সামলায়, নইলে দুই জায়গা
-     থেকে body বদলালে বন্ধ করার সময় পেজ ঝাঁকি খায় */
+  /* scroll lock এখানে নেই — Navbar একাই সেটা সামলায় */
 
   /* ---------- Escape + খোলার পর প্রথম ঘরে ফোকাস ---------- */
   useEffect(() => {
@@ -60,6 +79,7 @@ export default function AuthModal({ open, onClose }) {
 
   if (!mounted) return null;
 
+  const isForgot = mode === "forgot";
   const isLogin = mode === "login";
 
   return (
@@ -75,6 +95,7 @@ export default function AuthModal({ open, onClose }) {
       {/* panel */}
       <div
         role="dialog"
+        data-lenis-prevent
         aria-modal="true"
         aria-labelledby="auth-modal-title"
         className={`relative max-h-[90vh] w-full max-w-[420px] overflow-y-auto rounded-3xl bg-white p-7 shadow-[0_40px_80px_-30px_rgba(15,23,42,0.6)] transition-all duration-200 ease-out sm:p-8 ${
@@ -92,39 +113,55 @@ export default function AuthModal({ open, onClose }) {
           <X size={19} />
         </button>
 
-        <div className="pr-8">
-          <h2 id="auth-modal-title" className="text-2xl font-bold">
-            {isLogin ? "Welcome back" : "Create your account"}
-          </h2>
-          <p className="mt-2 text-sm leading-relaxed">
-            {isLogin
-              ? "Pick up where you left off with your applications and saved courses."
-              : "Track applications, save courses and keep your documents in one place."}
-          </p>
-        </div>
-
-        <GoogleButton
-          label={isLogin ? "Continue with Google" : "Sign up with Google"}
-        />
-
-        <Divider />
-
-        {isLogin ? (
-          <LoginForm firstFieldRef={firstFieldRef} />
-        ) : (
-          <SignupForm firstFieldRef={firstFieldRef} />
-        )}
-
-        <p className="mt-6 text-center text-sm">
-          {isLogin ? "New to Riz Migration?" : "Already have an account?"}{" "}
+        {isForgot && (
           <button
             type="button"
-            onClick={() => setMode(isLogin ? "signup" : "login")}
-            className="font-semibold text-primary-dark hover:underline"
+            onClick={() => setMode("login")}
+            className="mb-5 inline-flex items-center gap-1.5 text-sm font-medium text-primary-dark hover:underline"
           >
-            {isLogin ? "Create an account" : "Log in"}
+            <ArrowLeft size={15} />
+            Back to log in
           </button>
-        </p>
+        )}
+
+        <div className="pr-8">
+          <h2 id="auth-modal-title" className="text-2xl font-bold">
+            {copy[mode].title}
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed">{copy[mode].sub}</p>
+        </div>
+
+        {/* পাসওয়ার্ড রিসেটের সময় Google দেখানোর মানে হয় না */}
+        {!isForgot && (
+          <>
+            <GoogleButton
+              label={isLogin ? "Continue with Google" : "Sign up with Google"}
+            />
+            <Divider />
+          </>
+        )}
+
+        {mode === "login" && (
+          <LoginForm
+            firstFieldRef={firstFieldRef}
+            onForgot={() => setMode("forgot")}
+          />
+        )}
+        {mode === "signup" && <SignupForm firstFieldRef={firstFieldRef} />}
+        {mode === "forgot" && <ForgotForm firstFieldRef={firstFieldRef} />}
+
+        {!isForgot && (
+          <p className="mt-6 text-center text-sm">
+            {isLogin ? "New to Riz Migration?" : "Already have an account?"}{" "}
+            <button
+              type="button"
+              onClick={() => setMode(isLogin ? "signup" : "login")}
+              className="font-semibold text-primary-dark hover:underline"
+            >
+              {isLogin ? "Create an account" : "Log in"}
+            </button>
+          </p>
+        )}
       </div>
     </div>
   );
@@ -184,7 +221,7 @@ function Divider() {
 
 /* ---------------- login ---------------- */
 
-function LoginForm({ firstFieldRef }) {
+function LoginForm({ firstFieldRef, onForgot }) {
   const [form, setForm] = useState({ email: "", password: "" });
   const update = (key) => (e) =>
     setForm((prev) => ({ ...prev, [key]: e.target.value }));
@@ -222,12 +259,13 @@ function LoginForm({ firstFieldRef }) {
           Keep me signed in
         </label>
 
-        <Link
-          href="/forgot-password"
+        <button
+          type="button"
+          onClick={onForgot}
           className="text-primary-dark hover:underline"
         >
           Forgot password
-        </Link>
+        </button>
       </div>
 
       <button
@@ -238,6 +276,78 @@ function LoginForm({ firstFieldRef }) {
       >
         Log in
       </button>
+    </div>
+  );
+}
+
+/* ---------------- forgot password ---------------- */
+
+function ForgotForm({ firstFieldRef }) {
+  const [email, setEmail] = useState("");
+  const [sent, setSent] = useState(false);
+
+  const handleSubmit = () => {
+    if (!email.trim()) return;
+    // TODO: ব্যাকএন্ড রেডি হলে reset link পাঠানোর API কল এখানে বসবে
+    setSent(true);
+  };
+
+  if (sent) {
+    return (
+      <div className="mt-7 text-center">
+        <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary-dark">
+          <MailCheck size={26} />
+        </span>
+
+        <h3 className="mt-5 text-lg font-semibold">Check your inbox</h3>
+        <p className="mt-2 text-sm leading-relaxed">
+          If an account exists for{" "}
+          <span className="font-medium text-dark">{email}</span>, a reset link is
+          on its way. It expires in 30 minutes.
+        </p>
+
+        <button
+          type="button"
+          onClick={() => setSent(false)}
+          className="mt-5 text-sm font-medium text-primary-dark hover:underline"
+        >
+          Use a different email
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-7 space-y-3.5">
+      <Field
+        ref={firstFieldRef}
+        icon={Mail}
+        type="email"
+        placeholder="Email address"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+      />
+
+      <button
+        type="button"
+        onClick={handleSubmit}
+        disabled={!email.trim()}
+        className="btn btn-primary w-full disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        Send reset link
+      </button>
+
+      <p className="pt-1 text-center text-xs leading-relaxed">
+        Still stuck? Write to{" "}
+        <a
+          href="mailto:info@therizmigration.com"
+          className="text-primary-dark underline"
+        >
+          info@therizmigration.com
+        </a>{" "}
+        and we will sort it out.
+      </p>
     </div>
   );
 }

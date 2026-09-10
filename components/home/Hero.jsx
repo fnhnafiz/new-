@@ -49,7 +49,7 @@ export default function Hero() {
         preserveAspectRatio="none"
         aria-hidden="true"
       >
-        <path d="M0 0 Q720 110 1440 0 L1440 110 L0 110 Z" fill="#ffffff" />
+        <path d="M0 0 Q720 110 1440 0 L1440 110 L0 110 Z" fill="#f9fafb" />
       </svg>
     </section>
   );
