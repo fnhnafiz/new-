@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { Quote } from "lucide-react";
+import { Quote, Star } from "lucide-react";
 
 const testimonials = [
   {
@@ -101,7 +101,7 @@ export default function SuccessStories() {
   const reduced = useReducedMotion();
 
   return (
-    <section className=" py-20 lg:py-28">
+    <section className="py-20 lg:py-28">
       <div className="wrapper px-5 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
@@ -130,23 +130,27 @@ export default function SuccessStories() {
           <TestimonialsColumn
             testimonials={firstColumn}
             duration={19}
+            direction="up"
             paused={reduced}
           />
           <TestimonialsColumn
             testimonials={secondColumn}
             duration={24}
+            direction="down"
             paused={reduced}
             className="hidden md:block"
           />
           <TestimonialsColumn
             testimonials={thirdColumn}
             duration={21}
+            direction="up"
             paused={reduced}
             className="hidden lg:block"
           />
           <TestimonialsColumn
             testimonials={fourthColumn}
             duration={26}
+            direction="down"
             paused={reduced}
             className="hidden xl:block"
           />
@@ -166,12 +170,24 @@ export function TestimonialsColumn({
   className = "",
   testimonials,
   duration = 20,
+  direction = "up",
   paused = false,
 }) {
+  const goingUp = direction === "up";
+
+  /*
+    লিস্টটা দুবার বসানো, তাই ৫০% সরালেই ঠিক এক সেট পার হয়।
+    উপরে যেতে: 0% থেকে -50%
+    নিচে যেতে: -50% থেকে 0% — শুরুটা মাঝখানে বলে উপরে ফাঁকা থাকে না
+  */
+  const from = goingUp ? "0%" : "-50%";
+  const to = goingUp ? "-50%" : "0%";
+
   return (
     <div className={className}>
       <motion.div
-        animate={paused ? undefined : { translateY: "-50%" }}
+        initial={{ translateY: from }}
+        animate={paused ? { translateY: from } : { translateY: to }}
         transition={{
           duration,
           repeat: Infinity,
@@ -185,28 +201,45 @@ export function TestimonialsColumn({
             {testimonials.map(({ text, image, name, role, flag }) => (
               <figure
                 key={`${index}-${name}`}
-                className="w-full max-w-xs rounded-3xl border border-border bg-white p-8"
+                className="w-full max-w-xs overflow-hidden rounded-3xl bg-white shadow-[0_2px_6px_rgba(15,23,42,0.06)] ring-1 ring-border transition-shadow duration-300 hover:shadow-[0_24px_50px_-28px_rgba(15,23,42,0.5)]"
               >
-                <Quote size={22} className="text-primary" />
+                <div className="relative p-7">
+                  {/* কোণায় বড় কোটেশন চিহ্ন, ওয়াটারমার্কের মতো */}
+                  <Quote
+                    size={72}
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -top-2 right-3 text-primary/[0.07]"
+                  />
 
-                <blockquote className="mt-4 text-sm leading-relaxed">
-                  {text}
-                </blockquote>
+                  <div className="relative flex gap-0.5">
+                    {[0, 1, 2, 3, 4].map((i) => (
+                      <Star
+                        key={i}
+                        size={14}
+                        className="fill-primary text-primary"
+                      />
+                    ))}
+                  </div>
 
-                <figcaption className="mt-6 flex items-center gap-3 border-t border-border pt-5">
+                  <blockquote className="relative mt-4 text-[15px] leading-relaxed">
+                    {text}
+                  </blockquote>
+                </div>
+
+                <figcaption className="flex items-center gap-3 border-t border-border bg-surface px-7 py-5">
                   <img
-                    width={40}
-                    height={40}
+                    width={44}
+                    height={44}
                     src={image}
                     alt=""
-                    className="h-10 w-10 rounded-full object-cover"
+                    className="h-11 w-11 rounded-full object-cover ring-2 ring-white"
                   />
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold text-dark">
                       {name}
                     </p>
                     <p className="truncate text-xs">
-                      {flag} {role}
+                      <span aria-hidden="true">{flag}</span> {role}
                     </p>
                   </div>
                 </figcaption>

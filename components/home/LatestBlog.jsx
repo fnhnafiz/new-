@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
+import image from "@/assets/hero.png";
+import Image from "next/image";
 
 const posts = [
   {
@@ -14,7 +16,7 @@ const posts = [
     readTime: "6 min read",
     excerpt:
       "Admissions officers are not looking for a perfect record. They are looking for an account that adds up. Here is the structure that works, and the three explanations that get files rejected.",
-    src: "/blog/1.webp",
+    src: image,
   },
   {
     slug: "uk-january-intake-deadlines",
@@ -24,7 +26,7 @@ const posts = [
     readTime: "5 min read",
     excerpt:
       "Universities publish one date. CAS processing, visa appointments and financial hold periods quietly move it forward by six weeks. Work backwards from these dates instead.",
-    src: "/blog/2.webp",
+    src: image,
   },
   {
     slug: "bank-statement-visa-refusal",
@@ -34,7 +36,7 @@ const posts = [
     readTime: "7 min read",
     excerpt:
       "The amount is rarely the problem. It is the age of the account, the source of the deposits and whose name sits on the paperwork. Fix these before you book an appointment.",
-    src: "/blog/3.webp",
+    src: image,
   },
   {
     slug: "germany-no-tuition-catch",
@@ -44,7 +46,7 @@ const posts = [
     readTime: "8 min read",
     excerpt:
       "The blocked account, the semester contribution, the language requirement that appears in year two. None of it is hidden, but nobody puts it on the brochure either.",
-    src: "/blog/4.webp",
+    src: image,
   },
   {
     slug: "sop-opening-lines",
@@ -54,7 +56,7 @@ const posts = [
     readTime: "4 min read",
     excerpt:
       "If your first sentence mentions childhood passion, an admissions officer has read it four hundred times this week. Open with the specific thing you built or fixed instead.",
-    src: "/blog/5.webp",
+    src: image,
   },
 ];
 
@@ -180,7 +182,7 @@ function BlogCarousel({ posts, autoplay = true }) {
         style={{ perspective: "1000px" }}
       >
         {posts.map((post, index) => (
-          <img
+          <Image
             key={post.slug}
             src={post.src}
             alt=""
