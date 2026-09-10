@@ -12,6 +12,7 @@ import {
   allCountries,
   contact,
 } from "@/components/Data/navigation";
+import AuthModal from "./AuthModal";
 
 const BTN =
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl px-5 py-3 text-[15px] font-medium leading-none transition-all duration-300";
@@ -22,6 +23,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSection, setMobileSection] = useState(null);
   const [scrolled, setScrolled] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
   const closeTimer = useRef(null);
 
   useEffect(() => {
@@ -48,12 +50,34 @@ export default function Navbar() {
     return () => document.removeEventListener("keydown", onKey);
   }, []);
 
+   // মডাল বেরোনোর অ্যানিমেশন শেষ হওয়ার পরে lock খুলবে
+  const [locked, setLocked] = useState(false);
+
   useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    if (mobileOpen || authOpen) {
+      setLocked(true);
+      return;
+    }
+    const timer = setTimeout(() => setLocked(false), 240);
+    return () => clearTimeout(timer);
+  }, [mobileOpen, authOpen]);
+
+  useEffect(() => {
+    if (!locked) return;
+
+    // scrollbar এর প্রস্থ মেপে ঠিক ততটুকু padding, নইলে পেজ ডানে সরে যায়
+    const scrollbar = window.innerWidth - document.documentElement.clientWidth;
+    const prevOverflow = document.body.style.overflow;
+    const prevPadding = document.body.style.paddingRight;
+
+    document.body.style.overflow = "hidden";
+    if (scrollbar > 0) document.body.style.paddingRight = `${scrollbar}px`;
+
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = prevOverflow;
+      document.body.style.paddingRight = prevPadding;
     };
-  }, [mobileOpen]);
+  }, [locked]);
 
   const openNow = (key) => {
     clearTimeout(closeTimer.current);
@@ -83,10 +107,8 @@ export default function Navbar() {
     <>
       <header
         onMouseLeave={scheduleClose}
-        className={`sticky top-0 z-50 border-b transition-[background-color,border-color,box-shadow] duration-500 ease-out px-4 ${
-          scrolled
-            ? "border-transparent bg-primary shadow-[0_10px_30px_-16px_rgba(15,148,136,0.85)]"
-            : "border-border bg-white"
+        className={`sticky top-0 z-50 px-4 transition-[background-color,border-color,box-shadow] duration-500 ease-out ${
+          scrolled ? "border-transparent bg-primary" : "border-border bg-white"
         }`}
       >
         <div
@@ -94,7 +116,7 @@ export default function Navbar() {
             scrolled ? "h-16 xl:h-[68px]" : "h-16 xl:h-20"
           }`}
         >
-          <Logo />
+          <Logo scrolled={scrolled} />
 
           {/* ---------- Desktop nav ---------- */}
           <nav className="hidden xl:block" aria-label="Main">
@@ -151,16 +173,17 @@ export default function Navbar() {
           </nav>
 
           <div className="hidden items-center gap-2 xl:flex">
-            <Link
-              href="/login"
+            <button
+              type="button"
+              onClick={() => setAuthOpen(true)}
               className={`${BTN} ${
                 scrolled
-                  ? "border border-white/40 bg-white/10 text-white hover:bg-white/20"
-                  : "border border-[#e5e7eb] text-[#1a1a1a] hover:border-[#14b8a6] hover:text-[#0f9488]"
+                  ? "border border-white/40 text-white hover:bg-white/15"
+                  : "border border-[#e5e7eb] text-[#1a1a1a] hover:border-primary hover:text-primary-dark"
               }`}
             >
               Log in
-            </Link>
+            </button>
 
             <Link
               href="/counseling"
@@ -178,7 +201,7 @@ export default function Navbar() {
             type="button"
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
-            className={`-mr-2 p-2 xl:hidden transition-colors ${
+            className={`-mr-2 p-2 transition-colors xl:hidden ${
               scrolled ? "text-white" : "text-dark"
             }`}
           >
@@ -233,7 +256,7 @@ export default function Navbar() {
                   <div className="mt-6 space-y-3">
                     <Link
                       href="/visa-checker"
-                      className={`${BTN} w-full bg-[#14b8a6] text-white hover:bg-[#0f9488]`}
+                      className={`${BTN} w-full bg-primary text-white hover:bg-[#0f9488]`}
                     >
                       Check my chances
                     </Link>
@@ -362,12 +385,16 @@ export default function Navbar() {
             )}
 
             <div className="py-6">
-              <Link
-                href="/login"
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileOpen(false);
+                  setAuthOpen(true);
+                }}
                 className={`${BTN} w-full border border-[#e5e7eb] text-[#1a1a1a]`}
               >
                 Log in
-              </Link>
+              </button>
             </div>
           </nav>
         </div>
@@ -391,11 +418,15 @@ export default function Navbar() {
           </Link>
         </div>
       </div>
+
+      {/* ---------- Auth modal ---------- */}
+      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </>
   );
 }
 
 /* ---------------- sub components ---------------- */
+
 function Logo({ scrolled = false }) {
   return (
     <Link href="/" className="flex items-baseline gap-1.5">
