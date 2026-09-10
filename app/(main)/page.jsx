@@ -8,16 +8,15 @@ import FinalCta from "@/components/home/FinalCta";
 import Hero from "@/components/home/Hero";
 import HowItWorks from "@/components/home/HowItWorks";
 import LatestBlog from "@/components/home/LatestBlog";
-import PosterBanner from "@/components/home/PosterBanner";
 import Services from "@/components/home/Services";
 import SuccessStories from "@/components/home/SuccessStories";
 import TrustBar from "@/components/home/TrustBar";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
 import React from "react";
 
-const page = () => {
+export default function page() {
   return (
-    <div className="">
+    <div>
       <Hero />
       <TrustBar />
       <Services />
@@ -34,6 +33,4 @@ const page = () => {
       <FinalCta />
     </div>
   );
-};
-
-export default page;
+}
