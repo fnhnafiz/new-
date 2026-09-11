@@ -128,7 +128,7 @@ export default function CourseDetail({ course }) {
 
       {/* ================= body ================= */}
       <div className="bg-surface px-5 py-12 lg:px-8 lg:py-16">
-        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1fr_360px]">
+        <div className="wrapper grid l gap-10 lg:grid-cols-[1fr_360px]">
           <div className="space-y-6">
             {/* ---- quick facts ---- */}
             <div className="grid grid-cols-2 gap-px overflow-hidden rounded-3xl bg-border sm:grid-cols-4">
